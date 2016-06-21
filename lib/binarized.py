@@ -6,6 +6,7 @@ import tensorflow as tf
 
 # from cc.binarized_ops import binarized
 from cc import binarized_ops, binarized_grad
+from lib.batch_norm import batch_norm
 
 
 def weight_variable(shape):
@@ -32,10 +33,13 @@ def main():
 
     x = tf.placeholder(tf.float32, shape=[None, 64])
     y_ = tf.placeholder(tf.float32, shape=[None, 10])
+    phase_train = tf.placeholder(tf.bool, name='phase_train')
 
     w_1 = weight_variable([64, 32])
     b_1 = bias_variable([32])
-    h_1 = binarized_ops.binarized(tf.matmul(x, w_1) + b_1)
+    t_1 = tf.matmul(x, w_1) + b_1
+    bn = batch_norm(t_1, 1, phase_train)
+    h_1 = binarized_ops.binarized(bn)
 
     w_2 = weight_variable([32, 10])
     b_2 = bias_variable([10])
@@ -46,12 +50,12 @@ def main():
 
     sess.run(tf.initialize_all_variables())
     for i in range(1000):
-        train_step.run(feed_dict={x: x_train, y_: y_train})
+        train_step.run(feed_dict={x: x_train, y_: y_train, phase_train: True})
 
     correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-    print(accuracy.eval(feed_dict={x: x_test, y_: y_test}))
+    print(accuracy.eval(feed_dict={x: x_test, y_: y_test, phase_train: False}))
 
 
 if __name__ == '__main__':
