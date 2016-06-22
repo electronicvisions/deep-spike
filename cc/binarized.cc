@@ -23,7 +23,6 @@ class BinarizedOp : public OpKernel {
                                                      &output_tensor));
     auto output = output_tensor->template flat<float>();
 
-    // Set all but the first element of the output tensor to 0.
     const int N = input.size();
     for (int i = 0; i < N; i++) {
         if(input(i) >= 0){

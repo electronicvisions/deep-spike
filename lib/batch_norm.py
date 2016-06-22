@@ -10,7 +10,7 @@ def batch_norm(x, n_out, phase_train, scope='bn'):
     """
     Batch normalization on convolutional maps.
     Args:
-        x:           Tensor, 4D BHWD input maps
+        x:           Tensor
         n_out:       integer, depth of input maps
         phase_train: boolean tf.Varialbe, true indicates training phase
         scope:       string, variable scope
