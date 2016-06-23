@@ -6,14 +6,14 @@ This code is working.
 TODO:
 - Understand the relation ship between the parameters of the tf model (W and b) and this nest model.
 - Make a function that takes as input the n_input, ... and tau_m and returns spike_x,spike_y and spike_z
+- Find a solution to avoid repeating spikes
 
 '''
-
 
 import nest
 import numpy.random as rd
 import numpy as np
-import utils as ff
+import data_loader as ff
 import matplotlib.pyplot as plt
 
 # Parameters
@@ -32,7 +32,7 @@ W_out = rd.randn(n_hid,n_out) / np.sqrt(n_hid) * sigma
 dt = 1.
 tau_m = 30.
 tau_syn = 1.
-T = 1000.
+T = 100.
 
 V0 = -1.
 W0 = 1 * np.abs(V0)
@@ -70,15 +70,6 @@ spikedetector_hid = nest.Create("spike_detector",params={"withgid": True, "witht
 spikedetector_out = nest.Create("spike_detector",params={"withgid": True, "withtime": True})
 
 # Making connections
-def W_to_connector(W,w0=1,delay=1):
-    n_i,n_j = W.shape
-    l = []
-    for i in range(n_i):
-        for j in range(n_j):
-            l.append((i,j,W[i,j] * w0,delay))
-    con = sim.FromListConnector(l, column_names=["weight", "delay"])
-
-    return con
 
 conn_dict = {"rule": "all_to_all"}
 syn_dict = {"delay": 1., "weight": W0}
@@ -95,12 +86,13 @@ nest.Simulate(T)
 
 # plot the spike trains
 fig,ax_list = plt.subplots(3)
-
-for k,spike_detector,ax in zip(range(3),[spikedetector_in,spikedetector_hid,spikedetector_out],ax_list):
+titles = ['input','hidden','output']
+for k,spike_detector,ax,title in zip(range(3),[spikedetector_in,spikedetector_hid,spikedetector_out],ax_list,titles):
     dSD = nest.GetStatus(spike_detector, keys='events')[0]
     evs = dSD["senders"]
     ts = dSD["times"]
     ax.scatter(ts,evs)
     ax.set_xlim([0,T])
+    ax.set_ylabel(title)
 
 plt.show()

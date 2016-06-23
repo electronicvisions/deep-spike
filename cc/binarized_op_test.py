@@ -1,7 +1,6 @@
 import tensorflow as tf
 
-from binarized_ops import binarized
-
+from cc.binarized_ops import binarized
 
 def testBinarized():
     sess = tf.InteractiveSession()
