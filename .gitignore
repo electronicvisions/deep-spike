@@ -1,2 +1,7 @@
 .idea/
 .ropeproject/
+
+**/*.orig
+
+.DS_Store
+
