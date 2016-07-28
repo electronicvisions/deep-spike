@@ -70,7 +70,6 @@ spikedetector_hid = nest.Create("spike_detector",params={"withgid": True, "witht
 spikedetector_out = nest.Create("spike_detector",params={"withgid": True, "withtime": True})
 
 # Making connections
-
 conn_dict = {"rule": "all_to_all"}
 syn_dict = {"delay": 1., "weight": W0}
 nest.Connect(p_in, p_hid, conn_dict, syn_dict)

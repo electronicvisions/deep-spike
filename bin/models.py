@@ -79,7 +79,6 @@ class ShallowOverwritingNetwork:
         self.W_out = tf.Variable(tf.random_normal([n_hidden, n_output],stddev=sigma * 1./ np.sqrt(n_hidden)))
         self.b_out = tf.Variable(tf.zeros([n_output]))
 
-
         # Hidden layers
         y_act = tf.matmul(self.x, self.W_hid) + self.b_hid
         y_out = h(y_act)
