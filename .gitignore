@@ -4,3 +4,7 @@
 # Ignore compiled files
 *.pyc
 *.so
+
+**/*.orig
+.DS_Store
+
